@@ -16,7 +16,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 
-@WebServlet(urlPatterns = "/",
+@WebServlet(urlPatterns = "/list",
         initParams = {
                 @WebInitParam(name = "driver", value = "org.h2.Driver"),
                 @WebInitParam(name = "url", value = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")
@@ -48,9 +48,6 @@ public class GunController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        resp.getWriter().println("Hello, World!");
-
         Collection<Gun> guns = gunDao.findAll();
         req.setAttribute("guns", guns);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
