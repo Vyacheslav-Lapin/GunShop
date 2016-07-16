@@ -1,7 +1,6 @@
 package dao.controllers;
 
 import dao.GunDao;
-import dao.h2.H2GunDao;
 import model.Gun;
 
 import javax.servlet.ServletConfig;
@@ -12,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Collection;
 
 @WebServlet(urlPatterns = "/list",
@@ -27,23 +24,8 @@ public class GunController extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-
         super.init(config);
-
-        String driver = config.getInitParameter("driver");
-        String url = config.getInitParameter("url");
-        try {
-            Class.forName(driver);
-            gunDao = new H2GunDao(() -> {
-                try {
-                    return DriverManager.getConnection(url);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }, config.getServletContext().getRealPath("/"));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        gunDao = (GunDao) config.getServletContext().getAttribute("gunDao");
     }
 
     @Override

@@ -12,10 +12,10 @@ public class Person {
 
     @Size(max = 255)
     @NotNull
-    private final String first_name; // first_name VARCHAR(255) NOT NULL,
+    private final String firstName; // first_name VARCHAR(255) NOT NULL,
 
     @Size(max = 255)
-    private final String last_name; // last_name  VARCHAR(255),
+    private final String lastName; // last_name  VARCHAR(255),
 
     private final boolean permission; // permission BOOLEAN         DEFAULT FALSE,
 
