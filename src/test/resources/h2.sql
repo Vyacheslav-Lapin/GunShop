@@ -9,19 +9,15 @@ CREATE TABLE Person (
   address    VARCHAR(255),
   telephone  VARCHAR(15)
 );
-
 INSERT INTO Person (first_name, last_name, permission, dob, email, password, address, telephone)
 VALUES ('Jose', 'Eglesias', TRUE, '1980-06-15', 'Jose_Eglesias@mail.es', 'qwerty', 'Franco squere, 5/1, 10',
         '+38007654321');
-
 INSERT INTO Person (first_name, last_name, permission, dob, email, password, address, telephone)
 VALUES ('John', 'Eglesias', TRUE, '1980-06-15', 'John_Eglesias@mail.es', 'qwerty', 'Franco squere, 5/1, 10',
         '+38007654321');
-
 INSERT INTO Person (first_name, last_name, dob, email, password, address, telephone)
 VALUES ('Pit', 'Eglesias', '1980-06-15', 'Pit_Eglesias@mail.es', 'qwerty', 'Franco squere, 5/1, 10',
         '+38007654321');
-
 INSERT INTO Person (first_name, last_name, permission, dob, email, password, address, telephone)
 VALUES ('Aisha', 'Eglesias', TRUE, '1980-06-15', 'Aisha_Eglesias@mail.es', 'qwerty', 'Franco squere, 5/1, 10',
         '+38007654321');
@@ -31,7 +27,6 @@ CREATE TABLE Gun (
   name    VARCHAR(255) NOT NULL,
   caliber DOUBLE       NOT NULL
 );
-
 INSERT INTO Gun (name, caliber) VALUES ('Kolt', 11.52);
 INSERT INTO Gun (name, caliber) VALUES ('Beretta', 6.35);
 INSERT INTO Gun (name, caliber) VALUES ('Glock', 9.0);
@@ -43,7 +38,6 @@ CREATE TABLE Instance (
   model_id INT NOT NULL,
   FOREIGN KEY (model_id) REFERENCES Gun(id)
 );
-
 INSERT INTO Instance (model_id) VALUES (1);
 INSERT INTO Instance (model_id) VALUES (1);
 INSERT INTO Instance (model_id) VALUES (1);
