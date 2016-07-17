@@ -5,7 +5,6 @@ import model.Gun;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
-@WebServlet(urlPatterns = "/list",
-        initParams = {
-                @WebInitParam(name = "driver", value = "org.h2.Driver"),
-                @WebInitParam(name = "url", value = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")
-        })
+@WebServlet("/list")
 public class GunController extends HttpServlet {
 
     private GunDao gunDao;

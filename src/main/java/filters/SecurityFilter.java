@@ -28,19 +28,19 @@ public class SecurityFilter implements Filter {
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = request.getSession(true);
-        if (session.getAttribute("person") != null || request.getRequestURI().equals("/login.jsp"))
+        String requestURI = request.getRequestURI();
+        if (session.getAttribute("person") != null || requestURI.equals("/login.jsp"))
             chain.doFilter(request, response);
         else {
             Optional<Person> person = Optional.ofNullable(request.getParameter("j_username"))
-                    .flatMap(
-                            login -> Optional.ofNullable(request.getParameter("j_password"))
-                                    .flatMap(pwd -> personDao.getByCredentials(login, pwd))
-                    );
+                    .flatMap(login -> Optional.ofNullable(request.getParameter("j_password"))
+                                    .flatMap(pwd -> personDao.getByCredentials(login, pwd)));
             if (person.isPresent()) {
-                session.setAttribute("person", person);
+                session.setAttribute("person", person.get());
                 chain.doFilter(request, response);
             } else {
-                response.sendRedirect("login.jsp");
+                request.setAttribute("requestURI", requestURI);
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
         }
     }
