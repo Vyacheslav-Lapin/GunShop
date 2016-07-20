@@ -3,7 +3,6 @@ package listeners;
 import dao.h2.H2GunDao;
 import dao.h2.H2PersonDao;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
@@ -24,21 +23,22 @@ import java.util.stream.Collectors;
 @WebListener
 public class DbInitListener implements ServletContextListener {
 
+    public static final String GUN_DAO = "gunDao";
+    public static final String PERSON_DAO = "personDao";
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        Supplier<Connection> connectionSupplier = () -> {
-            try {
-                Context initContext = new InitialContext();
-                Context envContext = (Context) initContext.lookup("java:/comp/env");
-                DataSource ds = (DataSource) envContext.lookup("jdbc/TestDB");
-                return ds.getConnection();
-            } catch (NamingException | SQLException e) {
-                throw new RuntimeException(e);
-            }
-        };
+        Supplier<Connection> connectionSupplier = getConnectionSupplier();
 
         ServletContext servletContext = sce.getServletContext();
+        execInitDbScript(connectionSupplier, servletContext);
+
+        servletContext.setAttribute(GUN_DAO, new H2GunDao(connectionSupplier));
+        servletContext.setAttribute(PERSON_DAO, new H2PersonDao(connectionSupplier));
+    }
+
+    private void execInitDbScript(Supplier<Connection> connectionSupplier, ServletContext servletContext) {
         try (Connection connection = connectionSupplier.get();
              Statement statement = connection.createStatement()) {
 
@@ -50,15 +50,27 @@ public class DbInitListener implements ServletContextListener {
                         try {
                             statement.addBatch(sql);
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            throw new RuntimeException(e);
                         }
                     });
             statement.executeBatch();
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        servletContext.setAttribute("gunDao", new H2GunDao(connectionSupplier));
-        servletContext.setAttribute("personDao", new H2PersonDao(connectionSupplier));
+    private Supplier<Connection> getConnectionSupplier() {
+        try {
+            DataSource lookup = (DataSource) new InitialContext().lookup("java:/comp/env/jdbc/TestDB");
+            return () -> {
+                try {
+                    return lookup.getConnection();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            };
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
