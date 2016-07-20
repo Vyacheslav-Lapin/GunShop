@@ -1,4 +1,4 @@
-package dao.controllers;
+package controllers;
 
 import dao.GunDao;
 import model.Gun;
