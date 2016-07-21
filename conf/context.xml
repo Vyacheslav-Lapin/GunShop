@@ -18,11 +18,6 @@
 <!-- The contents of this file will be loaded for each web application -->
 <Context>
 
-    <Resource name="jdbc/TestDB" auth="Container" type="javax.sql.DataSource"
-              maxTotal="100" maxIdle="30" maxWaitMillis="10000"
-              username="" password="" driverClassName="org.h2.Driver"
-              url="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
-
     <!-- Default set of monitored resources. If one of these changes, the    -->
     <!-- web application will be reloaded.                                   -->
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
@@ -32,5 +27,25 @@
     <!--
     <Manager pathname="" />
     -->
+
+    <Resource name="jdbc/TestDB"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxTotal="100"
+              maxIdle="30"
+              maxWaitMillis="10000"
+              username=""
+              password=""
+              driverClassName="org.h2.Driver"
+              url="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
+
+    <Realm className="org.apache.catalina.realm.DataSourceRealm"
+           localDataSource="true"
+           dataSourceName="jdbc/TestDB"
+           userTable="Person"
+           userNameCol="email"
+           userCredCol="password"
+           userRoleTable="Roles"
+           roleNameCol="role"/>
 
 </Context>

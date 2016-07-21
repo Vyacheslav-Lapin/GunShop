@@ -25,6 +25,7 @@ public class DbInitListener implements ServletContextListener {
 
     public static final String GUN_DAO = "gunDao";
     public static final String PERSON_DAO = "personDao";
+    private static final String INIT_DB_SCRIPT_PATH = "/WEB-INF/classes/h2.sql";
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -43,7 +44,7 @@ public class DbInitListener implements ServletContextListener {
              Statement statement = connection.createStatement()) {
 
             final String[] sqls = Files.lines(
-                    Paths.get(servletContext.getRealPath("/WEB-INF/classes/h2.sql")))
+                    Paths.get(servletContext.getRealPath(INIT_DB_SCRIPT_PATH)))
                     .collect(Collectors.joining()).split(";");
             Arrays.stream(sqls)
                     .forEach((sql) -> {

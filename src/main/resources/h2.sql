@@ -22,6 +22,19 @@ INSERT INTO Person (first_name, last_name, permission, dob, email, password, add
 VALUES ('Aisha', 'Eglesias', TRUE, '1980-06-15', 'Aisha_Eglesias@mail.es', 'qwerty', 'Franco squere, 5/1, 10',
         '+38007654321');
 
+CREATE TABLE Roles (
+  email VARCHAR(255) NOT NULL,
+  role  VARCHAR(15) NOT NULL,
+  PRIMARY KEY (email, role),
+  FOREIGN KEY (email) REFERENCES Person (email)
+);
+
+INSERT INTO Roles (email, role) VALUES ('Jose_Eglesias@mail.es', 'user');
+INSERT INTO Roles (email, role) VALUES ('Jose_Eglesias@mail.es', 'admin');
+INSERT INTO Roles (email, role) VALUES ('John_Eglesias@mail.es', 'user');
+INSERT INTO Roles (email, role) VALUES ('Pit_Eglesias@mail.es', 'user');
+INSERT INTO Roles (email, role) VALUES ('Aisha_Eglesias@mail.es', 'user');
+
 CREATE TABLE Gun (
   id      INT PRIMARY KEY AUTO_INCREMENT,
   name    VARCHAR(255) NOT NULL,
@@ -34,9 +47,9 @@ INSERT INTO Gun (name, caliber) VALUES ('AKM-47', 7.62);
 INSERT INTO Gun (name, caliber) VALUES ('AK-74', 5.45);
 
 CREATE TABLE Instance (
-  id INT PRIMARY KEY AUTO_INCREMENT,
+  id       INT PRIMARY KEY AUTO_INCREMENT,
   model_id INT NOT NULL,
-  FOREIGN KEY (model_id) REFERENCES Gun(id)
+  FOREIGN KEY (model_id) REFERENCES Gun (id)
 );
 INSERT INTO Instance (model_id) VALUES (1);
 INSERT INTO Instance (model_id) VALUES (1);

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+import static listeners.DbInitListener.GUN_DAO;
+
 @WebServlet("/list")
 public class GunController extends HttpServlet {
 
@@ -20,7 +22,7 @@ public class GunController extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        gunDao = (GunDao) config.getServletContext().getAttribute("gunDao");
+        gunDao = (GunDao) config.getServletContext().getAttribute(GUN_DAO);
     }
 
     @Override
