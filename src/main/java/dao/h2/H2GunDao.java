@@ -24,11 +24,6 @@ public class H2GunDao implements GunDao {
     }
 
     @Override
-    public Gun getById(long id) {
-        return null;
-    }
-
-    @Override
     public Collection<Gun> findAll() {
         Collection<Gun> guns = new HashSet<>();
         try (Connection connection = getConnection();
