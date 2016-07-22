@@ -3,8 +3,7 @@ package listeners;
 import dao.h2.H2GunDao;
 import dao.h2.H2PersonDao;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -22,6 +21,9 @@ import java.util.stream.Collectors;
 
 @WebListener
 public class DbInitListener implements ServletContextListener {
+
+    @Resource(name = "jdbc/TestDB")
+    private DataSource dataSource;
 
     public static final String GUN_DAO = "gunDao";
     public static final String PERSON_DAO = "personDao";
@@ -47,7 +49,7 @@ public class DbInitListener implements ServletContextListener {
                     Paths.get(servletContext.getRealPath(INIT_DB_SCRIPT_PATH)))
                     .collect(Collectors.joining()).split(";");
             Arrays.stream(sqls)
-                    .forEach((sql) -> {
+                    .forEach(sql -> {
                         try {
                             statement.addBatch(sql);
                         } catch (SQLException e) {
@@ -61,17 +63,12 @@ public class DbInitListener implements ServletContextListener {
     }
 
     private Supplier<Connection> getConnectionSupplier() {
-        try {
-            DataSource lookup = (DataSource) new InitialContext().lookup("java:/comp/env/jdbc/TestDB");
-            return () -> {
-                try {
-                    return lookup.getConnection();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            };
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
+        return () -> {
+            try {
+                return dataSource.getConnection();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 }

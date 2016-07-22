@@ -37,7 +37,6 @@
             <form-login-page>/login.html</form-login-page>
             <form-error-page>/error.html</form-error-page>
         </form-login-config>
-        <realm-name>All</realm-name>
     </login-config>
 
 </web-app>
