@@ -1,5 +1,7 @@
 package listeners;
 
+import common.functions.ExceptionalConsumer;
+import common.functions.ExceptionalSupplier;
 import dao.h2.H2GunDao;
 import dao.h2.H2PersonDao;
 
@@ -32,7 +34,8 @@ public class DbInitListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        Supplier<Connection> connectionSupplier = getConnectionSupplier();
+        Supplier<Connection> connectionSupplier =
+                ExceptionalSupplier.toUncheckedSupplier(dataSource::getConnection);
 
         ServletContext servletContext = sce.getServletContext();
         execInitDbScript(connectionSupplier, servletContext);
@@ -49,26 +52,10 @@ public class DbInitListener implements ServletContextListener {
                     Paths.get(servletContext.getRealPath(INIT_DB_SCRIPT_PATH)))
                     .collect(Collectors.joining()).split(";");
             Arrays.stream(sqls)
-                    .forEach(sql -> {
-                        try {
-                            statement.addBatch(sql);
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                    .forEach(ExceptionalConsumer.toUncheckedConsumer(statement::addBatch));
             statement.executeBatch();
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private Supplier<Connection> getConnectionSupplier() {
-        return () -> {
-            try {
-                return dataSource.getConnection();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        };
     }
 }

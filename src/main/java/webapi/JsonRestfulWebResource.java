@@ -2,28 +2,18 @@ package webapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import common.functions.ExceptionalFunction;
 
 import javax.ws.rs.core.Response;
 import java.util.Collection;
-import java.util.function.Function;
 
-public interface JsonRestfulWebResource {
+interface JsonRestfulWebResource {
 
-    ObjectWriter DEFAULT_PRETTY_PRINTER = new ObjectMapper()
-            .writer()
-            .withDefaultPrettyPrinter();
-
-    Function<Object, String> toJsonExceptional = value -> {
-        try {
-            return DEFAULT_PRETTY_PRINTER.writeValueAsString(value);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    };
+    ExceptionalFunction<Object, String, JsonProcessingException> toJsonExceptional =
+            new ObjectMapper().writer().withDefaultPrettyPrinter()::writeValueAsString;
 
     default String toJson(Object o) {
-        return toJsonExceptional.apply(o);
+        return toJsonExceptional.getOrThrowUnchecked(o);
     }
 
     default Response ok(Collection<?> objects) {
