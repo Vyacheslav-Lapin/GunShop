@@ -23,6 +23,7 @@ public class H2PersonDao implements PersonDao, JdbcDao {
 
     @Override
     public Optional<Person> getByCredentials(String login, String password) {
+        //language=H2
         String sql =
                 "SELECT id, first_name, last_name, permission, dob, address, telephone " +
                 "FROM Person WHERE email = ? and password = ?";

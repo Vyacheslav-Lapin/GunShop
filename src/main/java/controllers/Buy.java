@@ -1,7 +1,6 @@
 package controllers;
 
 import dao.GunDao;
-import model.Gun;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,14 +9,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-import static java.lang.Integer.parseInt;
 import static listeners.DbInitListener.GUN_DAO;
 
 @WebServlet("/buy")
-public class Buy extends HttpServlet{
+public class Buy extends HttpServlet {
 
-    public static final String GUN = "gun";
+    private static final String GUN = "gun";
+    private static final String ID = "id";
+    private static final String VIEW = "/buy/index.jsp";
     private GunDao gunDao;
 
     @Override
@@ -27,12 +28,12 @@ public class Buy extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final int id = parseInt(request.getParameter("id"));
-        final Gun gun = gunDao.getById(id).orElseThrow(RuntimeException::new);
+        Optional.ofNullable(request.getParameter(ID))
+                        .map(Long::parseLong)
+                        .map(gunDao::getById)
+                        .ifPresent(gun -> request.setAttribute(GUN, gun));
 
-        request.setAttribute(GUN, gun);
-
-        // noinspection InjectedReferences
-        request.getRequestDispatcher("/buy/index.jsp").forward(request, response);
+        request.getRequestDispatcher(VIEW)
+                .forward(request, response);
     }
 }
