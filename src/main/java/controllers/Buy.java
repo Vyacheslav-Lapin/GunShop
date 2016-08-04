@@ -30,7 +30,7 @@ public class Buy extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Optional.ofNullable(request.getParameter(ID))
                         .map(Long::parseLong)
-                        .map(gunDao::getById)
+                        .flatMap(gunDao::getById)
                         .ifPresent(gun -> request.setAttribute(GUN, gun));
 
         request.getRequestDispatcher(VIEW)

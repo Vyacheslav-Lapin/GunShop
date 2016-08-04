@@ -24,7 +24,7 @@ VALUES ('Aisha', 'Eglesias', TRUE, '1980-06-15', 'Aisha_Eglesias@mail.es', 'qwer
 
 CREATE TABLE Roles (
   email VARCHAR(255) NOT NULL,
-  role  VARCHAR(15) NOT NULL,
+  role  VARCHAR(15)  NOT NULL,
   PRIMARY KEY (email, role),
   FOREIGN KEY (email) REFERENCES Person (email)
 );

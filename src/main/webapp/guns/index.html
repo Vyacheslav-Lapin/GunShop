@@ -3,47 +3,13 @@
     <title>Catalog of our items</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="/_styles/style.css"/>
+    <script type="text/javascript" src="/_scripts/Server.js"></script>
+    <script type="text/javascript" src="/_scripts/GunCatalog.js"></script>
     <script type="text/javascript" async>
-
-        /** @interface */
-        function Gun() {
-        }
-        Gun.prototype.id = 0;
-        Gun.prototype.caliber = 0;
-        Gun.prototype.name = "";
-
-        var /** @type XMLHttpRequest */ xhr = new XMLHttpRequest();
-        xhr.open('GET', '/webapi/gun', true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4 || xhr.status !== 200) return;
-
-            var /** @type Array<Gun> */ gunList = JSON.parse(xhr.responseText);
-
-            //noinspection JSValidateTypes
-            var /** @type HTMLTableElement */ guns = document.getElementById("Guns");
-
-            gunList.forEach(function (gun) {
-                //noinspection JSValidateTypes
-                var /** @type HTMLTableRowElement */ gunTr = document.createElement("tr");
-                //noinspection JSValidateTypes
-                var /** @type HTMLTableCellElement */ name = document.createElement("td");
-                //noinspection JSValidateTypes
-                var /** @type HTMLAnchorElement */ buyLink = document.createElement("a");
-
-                buyLink.href = "/buy?id=" + gun.id;
-                buyLink.appendChild(document.createTextNode(gun.name));
-                name.appendChild(buyLink);
-                gunTr.appendChild(name);
-
-                //noinspection JSValidateTypes
-                var /** @type HTMLTableCellElement */ caliber = document.createElement("td");
-                caliber.appendChild(document.createTextNode(gun.caliber.toString()));
-                gunTr.appendChild(caliber);
-
-                guns.appendChild(gunTr);
-            });
-        };
-        xhr.send(null);
+        document.addEventListener("DOMContentLoaded", () => {
+            Server.getGuns()
+                    .then(guns => new GunCatalog().addAll(guns));
+        });
     </script>
 </head>
 <body>
