@@ -1,8 +1,7 @@
 'use strict';
 
-const /** @type XMLHttpRequest */ xhr = new XMLHttpRequest();
-const /** @type string */ method = 'GET';
-const /** @type string */ baseUrl = '/webapi/';
+const /** @type string */ METHOD = 'GET';
+const /** @type string */ BASE_URL = '/webapi/';
 
 class Server {
 
@@ -12,7 +11,8 @@ class Server {
      * @param {function(string)} reject
      */
     static getTextAsync(path, resolve, reject) {
-        xhr.open(method, baseUrl + path, true);
+        const /** @type XMLHttpRequest */ xhr = new XMLHttpRequest();
+        xhr.open(METHOD, BASE_URL + path, true);
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== 4) return;
             if (xhr.status === 200)
