@@ -33,7 +33,7 @@ class GunCatalog {
 
         //noinspection JSValidateTypes
         const /** @type HTMLTableCellElement */ caliber = document.createElement("td");
-        caliber.appendChild(document.createTextNode(gun.caliber.toString()));
+        caliber.appendChild(document.createTextNode(String(gun.caliber)));
         gunTr.appendChild(caliber);
 
         this.targetElement.appendChild(gunTr);
